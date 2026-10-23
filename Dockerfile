@@ -1,11 +1,14 @@
-FROM node:18-slim
+FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy application files into the image
+# Copy package manifests first
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
 COPY . .
 
-EXPOSE 3000
-
-# Install dependencies and start the app when the container starts
-CMD ["sh", "-c", "npm install --omit=dev && npm start"]
+CMD ["npm", "start"]
