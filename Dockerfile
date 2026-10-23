@@ -2,13 +2,10 @@ FROM node:18-slim
 
 WORKDIR /app
 
+# Copy application files into the image
 COPY . .
-
-# Check what files actually arrived in the image
-RUN ls -la
-
-RUN npm install --omit=dev
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Install dependencies and start the app when the container starts
+CMD ["sh", "-c", "npm install --omit=dev && npm start"]
