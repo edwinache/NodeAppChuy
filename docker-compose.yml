@@ -1,12 +1,7 @@
-version: '3.8'
-
 services:
-  web:
-    build:
-      context: .
-      network: host
-      dockerfile: Dockerfile
-    container_name: node_app
+  app:
+    build: .
+    container_name: node-app-chuy
     restart: unless-stopped
     ports:
       - "3000:3000"
