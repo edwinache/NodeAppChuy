@@ -4,6 +4,7 @@ services:
   web:
     build:
       context: .
+      network: host
       dockerfile: Dockerfile
     container_name: node_app
     restart: unless-stopped
