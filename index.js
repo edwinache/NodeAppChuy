@@ -3,7 +3,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-  res.send('¡Hola desde Node.js corriendo en Docker y Portainer!');
+  res.send('Hola Mundo');
 });
 
 app.listen(PORT, '0.0.0.0', () => {
