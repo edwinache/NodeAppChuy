@@ -26,7 +26,10 @@ export class NotFoundError extends AppError {
 }
 
 export class BadRequestError extends AppError {
-  constructor(message = 'Solicitud incorrecta', errors?: Record<string, unknown> | Array<unknown>) {
+  constructor(
+    message = 'Solicitud incorrecta',
+    errors?: Record<string, unknown> | Array<unknown>
+  ) {
     super(message, 400, true, errors);
   }
 }

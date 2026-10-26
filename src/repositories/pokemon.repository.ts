@@ -12,7 +12,11 @@ export class PokemonRepository {
     { id: '3', name: 'Bulbasaur', type: 'Grass', level: 11 },
   ];
 
-  async findAll(filters: { name?: string; limit?: number; offset?: number }): Promise<Pokemon[]> {
+  async findAll(filters: {
+    name?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<Pokemon[]> {
     let result = [...this.pokemons];
 
     if (filters.name) {
@@ -31,10 +35,17 @@ export class PokemonRepository {
   }
 
   async findByName(name: string): Promise<Pokemon | null> {
-    return this.pokemons.find((p) => p.name.toLowerCase() === name.toLowerCase()) || null;
+    return (
+      this.pokemons.find((p) => p.name.toLowerCase() === name.toLowerCase()) ||
+      null
+    );
   }
 
-  async create(data: { name: string; type: string; level: number }): Promise<Pokemon> {
+  async create(data: {
+    name: string;
+    type: string;
+    level: number;
+  }): Promise<Pokemon> {
     const newPokemon: Pokemon = {
       id: Date.now().toString(),
       ...data,

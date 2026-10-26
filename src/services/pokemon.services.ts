@@ -1,10 +1,17 @@
-import { PokemonRepository, Pokemon } from '../repositories/pokemon.repository.js';
+import {
+  PokemonRepository,
+  Pokemon,
+} from '../repositories/pokemon.repository.js';
 import { NotFoundError, BadRequestError } from '../errors/AppError.js';
 
 export class PokemonService {
   constructor(private pokemonRepository: PokemonRepository) {}
 
-  async getPokemons(filters: { name?: string; limit?: number; offset?: number }): Promise<Pokemon[]> {
+  async getPokemons(filters: {
+    name?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<Pokemon[]> {
     return this.pokemonRepository.findAll(filters);
   }
 
@@ -16,10 +23,16 @@ export class PokemonService {
     return pokemon;
   }
 
-  async createPokemon(data: { name: string; type: string; level: number }): Promise<Pokemon> {
+  async createPokemon(data: {
+    name: string;
+    type: string;
+    level: number;
+  }): Promise<Pokemon> {
     const existing = await this.pokemonRepository.findByName(data.name);
     if (existing) {
-      throw new BadRequestError(`Ya existe un Pokémon con el nombre '${data.name}'`);
+      throw new BadRequestError(
+        `Ya existe un Pokémon con el nombre '${data.name}'`
+      );
     }
     return this.pokemonRepository.create(data);
   }
