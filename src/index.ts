@@ -1,21 +1,17 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import express from 'express';
+import { env } from './config/env.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-app.use(helmet());
-app.use(cors());
 app.use(express.json());
 
-app.get('/', (_req: Request, res: Response) => {
-  res.send('Hello from NodeAppChuy running with TypeScript & Docker!');
+app.get('/', (_req, res) => {
+  res.json({
+    message: 'Hello from NodeAppChuy running with TypeScript & Docker!',
+    environment: env.NODE_ENV,
+  });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(env.PORT, () => {
+  console.log(`Server running in ${env.NODE_ENV} mode on port ${env.PORT}`);
 });
