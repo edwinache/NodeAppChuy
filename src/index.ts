@@ -1,14 +1,19 @@
 import express from 'express';
 import { env } from './config/env.js';
+import { requestLogger } from './middlewares/requestLogger.js';
 import { pokemonRouter } from './routes/pokemon.routes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
 const app = express();
 
+// 1. Request logging (mount first)
+app.use(requestLogger);
+
+// 2. Body parsing
 app.use(express.json());
 
-// Base health route
+// 3. Base health route
 app.get('/', (_req, res) => {
   res.json({
     message: 'Hello from NodeAppChuy running with TypeScript & Docker!',
@@ -16,13 +21,13 @@ app.get('/', (_req, res) => {
   });
 });
 
-// Mount Pokémon API routes
+// 4. API routes
 app.use('/api/v1/pokemon', pokemonRouter);
 
-// 404 handler for unknown routes
+// 5. 404 Fallback
 app.use(notFoundHandler);
 
-// Central error handler (must be last)
+// 6. Central Error Handler (must be last)
 app.use(errorHandler);
 
 app.listen(env.PORT, () => {
