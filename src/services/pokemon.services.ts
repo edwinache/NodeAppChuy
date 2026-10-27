@@ -1,46 +1,57 @@
 import {
+  pokemonRepository,
   PokemonRepository,
-  Pokemon,
 } from '../repositories/pokemon.repository.js';
+import {
+  CreatePokemonInput,
+  ListPokemonQuery,
+} from '../schemas/pokemon.schema.js';
 import { NotFoundError, BadRequestError } from '../errors/AppError.js';
 
 export class PokemonService {
-  constructor(private pokemonRepository: PokemonRepository) {}
+  constructor(private readonly repo: PokemonRepository = pokemonRepository) {}
 
-  async getPokemons(filters: {
-    name?: string;
-    limit?: number;
-    offset?: number;
-  }): Promise<Pokemon[]> {
-    return this.pokemonRepository.findAll(filters);
+  async list(query: ListPokemonQuery) {
+    return this.repo.findAll({
+      name: query.name,
+      limit: query.limit,
+      offset: query.offset,
+    });
   }
 
-  async getPokemonById(id: string): Promise<Pokemon> {
-    const pokemon = await this.pokemonRepository.findById(id);
+  async getById(id: number) {
+    if (isNaN(id) || id <= 0) {
+      throw new BadRequestError('Pokemon ID must be a positive integer');
+    }
+
+    const pokemon = await this.repo.findById(id);
     if (!pokemon) {
-      throw new NotFoundError(`Pokémon con ID ${id} no encontrado`);
+      throw new NotFoundError(`Pokemon with ID ${id} not found`);
     }
     return pokemon;
   }
 
-  async createPokemon(data: {
-    name: string;
-    type: string;
-    level: number;
-  }): Promise<Pokemon> {
-    const existing = await this.pokemonRepository.findByName(data.name);
+  async create(input: CreatePokemonInput) {
+    const existing = await this.repo.findByName(input.name);
     if (existing) {
       throw new BadRequestError(
-        `Ya existe un Pokémon con el nombre '${data.name}'`
+        `Pokemon with name '${input.name}' already exists`
       );
     }
-    return this.pokemonRepository.create(data);
+
+    return this.repo.create(input);
   }
 
-  async deletePokemon(id: string): Promise<void> {
-    const deleted = await this.pokemonRepository.delete(id);
+  async delete(id: number) {
+    if (isNaN(id) || id <= 0) {
+      throw new BadRequestError('Pokemon ID must be a positive integer');
+    }
+
+    const deleted = await this.repo.delete(id);
     if (!deleted) {
-      throw new NotFoundError(`Pokémon con ID ${id} no encontrado`);
+      throw new NotFoundError(`Pokemon with ID ${id} not found`);
     }
   }
 }
+
+export const pokemonService = new PokemonService();

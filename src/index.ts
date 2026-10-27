@@ -1,14 +1,14 @@
 import express from 'express';
 import { env } from './config/env.js';
+import { pokemonRouter } from './routes/pokemon.routes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
-import { AppError } from './errors/AppError.js';
 
 const app = express();
 
 app.use(express.json());
 
-// Sample health route
+// Base health route
 app.get('/', (_req, res) => {
   res.json({
     message: 'Hello from NodeAppChuy running with TypeScript & Docker!',
@@ -16,20 +16,13 @@ app.get('/', (_req, res) => {
   });
 });
 
-// Test route to simulate an operational error
-app.get('/test-error', () => {
-  throw AppError.badRequest('This is a simulated bad request error');
-});
+// Mount Pokémon API routes
+app.use('/api/v1/pokemon', pokemonRouter);
 
-// Test route to simulate an unexpected crash
-app.get('/test-crash', () => {
-  throw new Error('Something went horribly wrong in the database!');
-});
-
-// 1. Catch 404s for unhandled routes
+// 404 handler for unknown routes
 app.use(notFoundHandler);
 
-// 2. Centralized error handling middleware (must be last)
+// Central error handler (must be last)
 app.use(errorHandler);
 
 app.listen(env.PORT, () => {
